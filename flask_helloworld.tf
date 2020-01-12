@@ -47,6 +47,10 @@ resource "aws_instance" "flask_helloworld_ec_001" {
     source      = "requirements.txt"
     destination = "${var.project_dir}/requirements.txt"
   }
+  provisioner "file" {
+    source      = "wsgi.py"
+    destination = "${var.project_dir}/wsgi.py"
+  }
 
   # Create virtualenv
   provisioner "remote-exec" {
@@ -57,11 +61,16 @@ resource "aws_instance" "flask_helloworld_ec_001" {
     ]
   }
 
-  # Start Flask
+  # Configure uWSGI to run flask
+  provisioner "file" {
+    source      = "confs/uwsgi/flask_helloworld.ini"
+    destination = "/tmp/flask_helloworld.ini"
+  }
   provisioner "remote-exec" {
     inline = [
-      "cd ${var.project_dir}",
-      "./env/bin/python hello.py &",
+      "sudo mv /tmp/flask_helloworld.ini /etc/uwsgi/apps-available/flask_helloworld.ini",
+      "sudo ln -s /etc/uwsgi/apps-available/flask_helloworld.ini /etc/uwsgi/apps-enabled/",
+      "sudo service uwsgi restart",
     ]
   }
 
@@ -72,6 +81,7 @@ resource "aws_instance" "flask_helloworld_ec_001" {
   }
   provisioner "remote-exec" {
     inline = [
+      "sudo rm -f /etc/nginx/sites-enabled/default",
       "sudo mv /tmp/flask_helloworld.conf /etc/nginx/sites-available/flask_helloworld.conf",
       "sudo ln -s /etc/nginx/sites-available/flask_helloworld.conf /etc/nginx/sites-enabled/flask_helloworld.conf",
       "sudo nginx -t && sudo service nginx restart",

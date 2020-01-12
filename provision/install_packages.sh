@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 sudo apt-get update
-sudo apt-get install -yq vim htop mc nginx virtualenv tmux iotop nload iftop
+sudo apt-get install -yq vim htop mc nginx virtualenv tmux iotop nload iftop uwsgi uwsgi-plugin-python3
