@@ -8,8 +8,8 @@ Enter a deployment directory and run make target
 
 ```shell
 cd deployment
-make init
-make apply
+make tf/init
+make tf/apply
 ```
 
 To see what targets you have run
