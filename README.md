@@ -8,6 +8,7 @@ Enter a deployment directory and run make target
 
 ```shell
 cd deployment
+make init
 make apply
 ```
 
