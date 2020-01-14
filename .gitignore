@@ -129,10 +129,11 @@ dmypy.json
 .pyre/
 
 # Terraform
-terraform.tfstate
-terraform.tfstate.backup
-.terraform/
-.terraform.tfstate.lock.info
+deployment/terraform.tfstate
+deployment/terraform.tfstate.backup
+deployment/.terraform/
+deployment/.terraform.tfstate.lock.info
 
 # Vim swap files
 *.swp
+

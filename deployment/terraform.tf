@@ -39,17 +39,15 @@ resource "aws_instance" "flask_helloworld_ec_001" {
   }
 
   # Copy project files
-  provisioner "file" {
-    source      = "hello.py"
-    destination = "${var.project_dir}/hello.py"
+  provisioner "local-exec" {
+    command = "rsync -av ../ ../dist --exclude .git --exclude .gitignore --exclude env --exclude deployment"
   }
   provisioner "file" {
-    source      = "requirements.txt"
-    destination = "${var.project_dir}/requirements.txt"
+    source      = "../dist/"
+    destination = "${var.project_dir}/"
   }
-  provisioner "file" {
-    source      = "wsgi.py"
-    destination = "${var.project_dir}/wsgi.py"
+  provisioner "local-exec" {
+    command = "rm -rf ../dist"
   }
 
   # Create virtualenv
@@ -89,6 +87,7 @@ resource "aws_instance" "flask_helloworld_ec_001" {
   }
 }
 
+# Write external ip to out var
 output "flask_helloworld_ip" {
   value = aws_instance.flask_helloworld_ec_001.public_ip
 }
